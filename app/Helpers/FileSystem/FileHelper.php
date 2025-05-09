@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Gallery;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -13,35 +14,42 @@ use Illuminate\Support\Facades\Storage;
      * @return string
      * @throws \Exception
      */
-    function uploadFileToS3($file, $directory = 'uploads')
-    {
-        // Validate the file
-        if (!$file->isValid()) {
-            \Log::error('Invalid file upload');
-            throw new \Exception('Invalid file upload');
-        }
-
-        // Generate a unique file name
-        $fileName = time() . '_' . $file->getClientOriginalName();
-
-        // Try storing the file in the 's3' disk under the specified directory
-        try {
-            $filePath = $file->storeAs($directory, $fileName, 's3');
-
-            if ($filePath === false) {
-                \Log::error('S3 file upload failed');
-                throw new \Exception('Failed to upload file to S3');
-            }
-
-            \Log::info('File uploaded to S3', ['file_path' => $filePath]);
-
-            // Return the file path
-            return config('AWS_FILE_LOAD_BASE').$filePath;
-        } catch (\Exception $e) {
-            \Log::error('Error uploading file to S3: ' . $e->getMessage());
-            throw $e;
-        }
+function uploadFileToS3($file, $directory = 'uploads', $options = [])
+{
+    if (!$file->isValid()) {
+        \Log::error('Invalid file upload');
+        throw new \Exception('Invalid file upload');
     }
+
+    $fileName = time() . '_' . $file->getClientOriginalName();
+
+    try {
+        $filePath = $file->storeAs($directory, $fileName, 's3');
+
+        if ($filePath === false) {
+            \Log::error('S3 file upload failed');
+            throw new \Exception('Failed to upload file to S3');
+        }
+
+        $fullUrl = config('AWS_FILE_LOAD_BASE') . $filePath;
+
+        // Save to Gallery
+        Gallery::create([
+            'url' => $fullUrl,
+            'category_id' => $options['category_id'] ?? null,
+            'description' => $options['description'] ?? null,
+            'type' => $options['type'] ?? null,
+            'uploaded_by' => $options['uploaded_by'] ?? null,
+        ]);
+
+        \Log::info('File uploaded to S3', ['file_path' => $filePath]);
+
+        return $fullUrl;
+    } catch (\Exception $e) {
+        \Log::error('Error uploading file to S3: ' . $e->getMessage());
+        throw $e;
+    }
+}
 
 
 
