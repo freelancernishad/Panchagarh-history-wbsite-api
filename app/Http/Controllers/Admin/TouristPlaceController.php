@@ -18,9 +18,9 @@ class TouristPlaceController extends Controller
 {
     $validator = Validator::make($request->all(), [
         'category_id' => 'nullable|exists:tourist_place_categories,id',
-        'name' => 'required|string|max:255',
+        'name' => 'nullable|string|max:255',
         'short_description' => 'nullable|string|max:255',
-        'description' => 'required|string',
+        'description' => 'nullable|string',
         'location' => 'nullable|string|max:255',
         'history' => 'nullable|string',
         'architecture' => 'nullable|string',
@@ -90,9 +90,9 @@ class TouristPlaceController extends Controller
 
     $validator = Validator::make($request->all(), [
         'category_id' => 'nullable|exists:tourist_place_categories,id',
-        'name' => 'sometimes|required|string|max:255',
+        'name' => 'sometimes|nullable|string|max:255',
         'short_description' => 'nullable|string|max:255',
-        'description' => 'sometimes|required|string',
+        'description' => 'sometimes|nullable|string',
         'location' => 'nullable|string|max:255',
         'history' => 'nullable|string',
         'architecture' => 'nullable|string',
