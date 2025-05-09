@@ -33,6 +33,13 @@ Route::get('send-test-email', function () {
     }
 });
 
+Route::get('/file/{filename}', function ($filename) {
+
+    return getUploadDocumentsToS3($filename);
+
+
+})->where('filename', '.*');
+
 
 
 Route::get('/files/{path}', function ($path) {

@@ -33,4 +33,24 @@ class TouristPlace extends Model
     {
         return $this->belongsTo(TouristPlaceCategory::class, 'category_id');
     }
+
+    // Override the image_url attribute
+    public function getImageUrlAttribute($value)
+    {
+        return $value ? url('/file/' . ltrim($value, '/')) : null;
+    }
+
+    // Override the gallery attribute
+    public function getGalleryAttribute($value)
+    {
+        $gallery = json_decode($value, true);
+
+        if (!is_array($gallery)) {
+            return [];
+        }
+
+        return array_map(function ($filename) {
+            return url('/file/' . ltrim($filename, '/'));
+        }, $gallery);
+    }
 }
