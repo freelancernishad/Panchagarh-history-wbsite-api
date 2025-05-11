@@ -141,7 +141,7 @@ function getUploadDocumentsToS3($filename)
             'Key'    => $filename,
         ]);
 
-        $request = $s3->createPresignedRequest($cmd, 604800);
+        $request = $s3->createPresignedRequest($cmd, '+7 days');
         return (string) $request->getUri(); // Return only the presigned URL
     } catch (\Exception $e) {
         Log::error('Error generating S3 presigned URL: ' . $e->getMessage());
