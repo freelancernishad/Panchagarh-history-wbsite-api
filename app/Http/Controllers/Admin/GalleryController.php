@@ -13,9 +13,30 @@ class GalleryController extends Controller
     // Admin Route: Get all galleries (paginated)
     public function index(Request $request)
     {
-        $galleries = Gallery::with('category')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = Gallery::with('category');
+
+        // Apply filters if provided
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('uploaded_by')) {
+            $query->where('uploaded_by', $request->uploaded_by);
+        }
+
+        if ($request->has('date_from') && $request->has('date_to')) {
+            $query->whereBetween('created_at', [$request->date_from, $request->date_to]);
+        } elseif ($request->has('date_from')) {
+            $query->where('created_at', '>=', $request->date_from);
+        } elseif ($request->has('date_to')) {
+            $query->where('created_at', '<=', $request->date_to);
+        }
+
+        $galleries = $query->orderBy('created_at', 'desc')->paginate(10);
 
         return response()->json($galleries);
     }
