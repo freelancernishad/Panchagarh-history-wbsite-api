@@ -106,7 +106,17 @@ function uploadFileToS3($file, $directory = 'uploads', $options = [])
     return $filePath;
 }
 
+function getUploadDocumentsToS3LifeTime($filename)
+{
+    if (!$filename) {
+        return null;
+    }
 
+    $bucket = env('AWS_BUCKET');
+    $region = env('AWS_DEFAULT_REGION');
+
+    return "https://{$bucket}.s3.{$region}.amazonaws.com/{$filename}";
+}
 
 function getUploadDocumentsToS3($filename)
 {
@@ -131,7 +141,7 @@ function getUploadDocumentsToS3($filename)
             'Key'    => $filename,
         ]);
 
-        $request = $s3->createPresignedRequest($cmd, '+5 minutes');
+        $request = $s3->createPresignedRequest($cmd, 604800);
         return (string) $request->getUri(); // Return only the presigned URL
     } catch (\Exception $e) {
         Log::error('Error generating S3 presigned URL: ' . $e->getMessage());

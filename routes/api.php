@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Api\Server\ServerStatusController;
 use App\Http\Controllers\Public\TouristPlacePublicController;
 use App\Http\Controllers\Api\User\Package\UserPackageController;
@@ -67,3 +68,9 @@ Route::get('tourist-places', [TouristPlacePublicController::class, 'index']);
 
 // 🌐 Public single get by name
 Route::get('tourist-places/name/{name}', [TouristPlacePublicController::class, 'showByName']);
+
+
+
+    Route::get('galleries', [GalleryController::class, 'index']);
+
+    Route::get('galleries/{id}', [GalleryController::class, 'show']);

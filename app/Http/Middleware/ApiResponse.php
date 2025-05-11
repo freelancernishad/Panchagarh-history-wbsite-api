@@ -19,7 +19,7 @@ class ApiResponse
     public function handle(Request $request, Closure $next)
     {
         // Skip ApiResponse middleware for the /files/{path} route
-        if ($request->is('files/*')) {
+        if ($request->is('files/*') || $request->is('file/*')) {
             return $next($request);
         }
 
