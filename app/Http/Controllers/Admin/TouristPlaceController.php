@@ -20,12 +20,11 @@ class TouristPlaceController extends Controller
             // Ensure gallery is an array
             $gallery = is_array($place->gallery) ? $place->gallery : json_decode($place->gallery, true);
 
-            // Manually map gallery URLs
+            // Check if gallery contains direct URLs or needs mapping
             $place->gallery = collect($gallery)->map(function ($file) {
-                return getUploadDocumentsToS3($file);
+                return filter_var($file, FILTER_VALIDATE_URL) ? $file : getUploadDocumentsToS3($file);
             });
 
-  
             return $place;
         });
 
