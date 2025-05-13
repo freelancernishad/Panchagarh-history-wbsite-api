@@ -66,6 +66,8 @@ Route::prefix('global/')->group(function () {
 // 🌐 Public TouristPlace list (all or filtered by category)
 Route::get('tourist-places', [TouristPlacePublicController::class, 'index']);
 
+
+
 // 🌐 Public single get by name
 Route::get('tourist-places/name/{name}', [TouristPlacePublicController::class, 'showByName']);
 
