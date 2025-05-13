@@ -11,7 +11,8 @@ class TouristPlacePublicController extends Controller
     // ✅ List All (with optional filters)
     public function index(Request $request)
     {
-        $query = TouristPlace::select('id','name','location','category_id','image_url')->with('category');
+        $query = TouristPlace::select('id', 'name', 'location', 'category_id', 'image_url')
+            ->with(['category:id,name']);
 
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
