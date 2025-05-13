@@ -29,9 +29,9 @@ class ApiResponse
         // Check if the response is a valid Response object
         if ($response instanceof Response) {
             // Decode the response content if it's JSON
-            Log::info($response->getContent());
+
             $responseData = json_decode($response->getContent(), true) ?? [];
-            Log::info($responseData);
+
 
 
 
