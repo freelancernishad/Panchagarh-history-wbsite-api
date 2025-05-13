@@ -148,6 +148,7 @@ class TouristPlaceController extends Controller
                 $galleryUrls[] = $galleryUrl;
             }
 
+            Log::info('Gallery URLs: ', $galleryUrls);
             // Save updated gallery
             $place->gallery = $galleryUrls;
         }
