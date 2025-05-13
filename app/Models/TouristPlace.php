@@ -46,16 +46,5 @@ class TouristPlace extends Model
         return null;
     }
 
-    // Override the gallery attribute
-    public function getGalleryAttribute($value)
-    {
-        if (!is_array($value)) {
-            return [];
-        }
-
-        return array_map(function ($filename) {
-            return getUploadDocumentsToS3($filename);
-        }, $value);
-    }
     
 }
