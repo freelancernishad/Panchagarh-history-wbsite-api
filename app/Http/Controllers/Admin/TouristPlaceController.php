@@ -131,7 +131,8 @@ class TouristPlaceController extends Controller
             );
         }
 
-        $galleryUrls = $place->gallery ?? [];
+        $galleryUrls = [];
+        // $galleryUrls = $place->gallery ?? [];
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $galleryImage) {
                 $galleryUrl = uploadFileToS3(
