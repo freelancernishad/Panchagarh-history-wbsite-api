@@ -10,10 +10,29 @@ use Illuminate\Support\Facades\Validator;
 
 class TouristPlaceController extends Controller
 {
+
+
     public function index()
     {
-        return TouristPlace::with('category')->get();
+        $places = TouristPlace::with('category')->get();
+
+        $places->transform(function ($place) {
+            // Ensure gallery is an array
+            $gallery = is_array($place->gallery) ? $place->gallery : json_decode($place->gallery, true);
+
+            // Manually map gallery URLs
+            $place->gallery = collect($gallery)->map(function ($file) {
+                return getUploadDocumentsToS3($file);
+            });
+
+  
+            return $place;
+        });
+
+        return response()->json($places);
     }
+
+
 
     public function store(Request $request)
     {
@@ -152,7 +171,7 @@ class TouristPlaceController extends Controller
             // Save updated gallery
             $data['gallery'] = $galleryUrls;
         }
-        
+
         $place->update($data);
         Log::info('Updated gallery: ', $place->gallery);
 
