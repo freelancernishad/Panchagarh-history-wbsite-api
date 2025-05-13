@@ -151,6 +151,7 @@ class TouristPlaceController extends Controller
             Log::info('Gallery URLs: ', $galleryUrls);
             // Save updated gallery
             $place->gallery = $galleryUrls;
+            Log::info('Updated gallery: ', $place->gallery);
         }
 
         $place->update($data);
