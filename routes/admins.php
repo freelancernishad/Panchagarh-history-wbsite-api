@@ -11,7 +11,12 @@ use App\Http\Controllers\Admin\TouristPlaceCategoryController;
 
 
     Route::prefix('admin')->group(function () {
-        Route::apiResource('tourist-place-categories', TouristPlaceCategoryController::class);
+        Route::get('tourist-place-categories', [TouristPlaceCategoryController::class, 'index']);
+        Route::post('tourist-place-categories', [TouristPlaceCategoryController::class, 'store']);
+        Route::get('tourist-place-categories/{id}', [TouristPlaceCategoryController::class, 'show']);
+        Route::put('tourist-place-categories/{id}', [TouristPlaceCategoryController::class, 'update']);
+        Route::delete('tourist-place-categories/{id}', [TouristPlaceCategoryController::class, 'destroy']);
+
         Route::prefix('tourist-places')->group(function () {
             Route::get('/', [TouristPlaceController::class, 'index']);
             Route::post('/', [TouristPlaceController::class, 'store']);

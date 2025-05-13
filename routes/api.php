@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Api\Server\ServerStatusController;
 use App\Http\Controllers\Public\TouristPlacePublicController;
+use App\Http\Controllers\Admin\TouristPlaceCategoryController;
 use App\Http\Controllers\Api\User\Package\UserPackageController;
 use App\Http\Controllers\Api\User\PackageAddon\UserPackageAddonController;
 
@@ -64,6 +65,7 @@ Route::prefix('global/')->group(function () {
 
 
 // 🌐 Public TouristPlace list (all or filtered by category)
+ Route::get('tourist-place-categories', [TouristPlaceCategoryController::class, 'index']);
 Route::get('tourist-places', [TouristPlacePublicController::class, 'index']);
 
 
