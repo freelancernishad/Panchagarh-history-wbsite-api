@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\TouristPlaceCategoryController;
             Route::get('/', [TouristPlaceController::class, 'index']);
             Route::post('/', [TouristPlaceController::class, 'store']);
             Route::get('/{id}', [TouristPlaceController::class, 'show']);
-            Route::put('/{id}', [TouristPlaceController::class, 'update']);
+            Route::post('/{id}', [TouristPlaceController::class, 'update']);
             Route::delete('/{id}', [TouristPlaceController::class, 'destroy']);
         });
             // Admin Route: List all galleries (pagination)
