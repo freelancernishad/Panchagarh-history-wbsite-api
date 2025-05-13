@@ -12,7 +12,13 @@ use App\Http\Controllers\Admin\TouristPlaceCategoryController;
 
     Route::prefix('admin')->group(function () {
         Route::apiResource('tourist-place-categories', TouristPlaceCategoryController::class);
-        Route::apiResource('tourist-places', TouristPlaceController::class);
+        Route::prefix('tourist-places')->group(function () {
+            Route::get('/', [TouristPlaceController::class, 'index']);
+            Route::post('/', [TouristPlaceController::class, 'store']);
+            Route::get('/{id}', [TouristPlaceController::class, 'show']);
+            Route::put('/{id}', [TouristPlaceController::class, 'update']);
+            Route::delete('/{id}', [TouristPlaceController::class, 'destroy']);
+        });
             // Admin Route: List all galleries (pagination)
             Route::get('galleries', [GalleryController::class, 'index']);
 
