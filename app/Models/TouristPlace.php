@@ -49,15 +49,13 @@ class TouristPlace extends Model
     // Override the gallery attribute
     public function getGalleryAttribute($value)
     {
-        $gallery = json_decode($value, true);
-    
-        if (!is_array($gallery)) {
+        if (!is_array($value)) {
             return [];
         }
-    
+
         return array_map(function ($filename) {
             return getUploadDocumentsToS3($filename);
-        }, $gallery);
+        }, $value);
     }
     
 }
