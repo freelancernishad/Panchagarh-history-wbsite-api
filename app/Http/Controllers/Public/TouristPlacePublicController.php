@@ -29,6 +29,15 @@ class TouristPlacePublicController extends Controller
             return response()->json(['message' => 'Place not found'], 404);
         }
 
-        return $place;
+        // Ensure gallery is an array
+        $gallery = is_array($place->gallery) ? $place->gallery : json_decode($place->gallery, true);
+
+        // Check if gallery contains direct URLs or needs mapping
+        $place->gallery = collect($gallery)->map(function ($file) {
+            return filter_var($file, FILTER_VALIDATE_URL) ? $file : getUploadDocumentsToS3($file);
+        });
+
+        return response()->json($place);
     }
+
 }
