@@ -103,8 +103,20 @@ class TouristPlaceController extends Controller
 
     public function show($id)
     {
-        return TouristPlace::with('category')->findOrFail($id);
+        $place = TouristPlace::with('category')->findOrFail($id);
+
+        // Ensure gallery is an array
+        $gallery = is_array($place->gallery) ? $place->gallery : json_decode($place->gallery, true);
+
+        // Check if gallery contains direct URLs or needs mapping
+        $place->gallery = collect($gallery)->map(function ($file) {
+            return filter_var($file, FILTER_VALIDATE_URL) ? $file : getUploadDocumentsToS3($file);
+        });
+
+
+        return response()->json($place);
     }
+
 
     public function update(Request $request, $id)
     {
