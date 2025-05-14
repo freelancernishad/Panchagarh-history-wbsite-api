@@ -36,7 +36,8 @@ class GalleryController extends Controller
             $query->where('created_at', '<=', $request->date_to);
         }
 
-        $galleries = $query->latest('created_at')->paginate(10);
+        $perPage = $request->input('per_page', 10); // Default to 10 if per_page is not provided
+        $galleries = $query->latest('created_at')->paginate($perPage);
 
         return response()->json($galleries);
     }
