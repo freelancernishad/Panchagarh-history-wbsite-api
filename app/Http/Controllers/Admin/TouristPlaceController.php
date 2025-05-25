@@ -139,7 +139,7 @@ class TouristPlaceController extends Controller
             'image_url' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'map_link' => 'nullable|string|max:255',
+            'map_link' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {

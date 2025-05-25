@@ -25,7 +25,7 @@ class CreateTouristPlacesTable extends Migration
             $table->longText('best_time_to_visit')->nullable();
             $table->string('image_url')->nullable();
             $table->json('gallery')->nullable();
-            $table->string('map_link')->nullable();
+            $table->longText('map_link')->nullable();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('tourist_place_categories')->onDelete('set null');
