@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthenticateAdmin;
+use App\Http\Controllers\SpecialEventController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\TouristPlaceController;
 use App\Http\Controllers\Admin\TouristPlaceCategoryController;
@@ -35,6 +36,11 @@ use App\Http\Controllers\Admin\TouristPlaceCategoryController;
 
             // Admin Route: Delete a gallery
             Route::delete('galleries/{id}', [GalleryController::class, 'destroy']);
+
+
+            Route::apiResource('special-events', SpecialEventController::class);
+
+
 
 
     });

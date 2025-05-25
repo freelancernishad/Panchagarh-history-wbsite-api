@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SpecialEventController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Api\Server\ServerStatusController;
 use App\Http\Controllers\Public\TouristPlacePublicController;
@@ -78,3 +79,7 @@ Route::get('tourist-places/name/{name}', [TouristPlacePublicController::class, '
     Route::get('galleries', [GalleryController::class, 'index']);
 
     Route::get('galleries/{id}', [GalleryController::class, 'show']);
+
+
+    Route::get('special-events', [SpecialEventController::class, 'index']);
+    Route::get('special-events/{id}', [SpecialEventController::class, 'show']);
