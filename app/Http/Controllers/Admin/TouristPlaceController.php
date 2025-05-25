@@ -52,7 +52,9 @@ class TouristPlaceController extends Controller
             'image_url' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'map_link' => 'nullable|string|max:255',
+            'map_link' => 'nullable|string',
+            'main_attractions' => 'nullable|string', // ✅ New field
+            'purpose_and_significance' => 'nullable|string', // ✅ New field
         ]);
 
         if ($validator->fails()) {
@@ -140,6 +142,8 @@ class TouristPlaceController extends Controller
             'gallery' => 'nullable|array',
             'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'map_link' => 'nullable|string',
+            'main_attractions' => 'nullable|string', // ✅ New field
+            'purpose_and_significance' => 'nullable|string', // ✅ New field
         ]);
 
         if ($validator->fails()) {

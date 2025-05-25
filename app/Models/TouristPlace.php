@@ -22,7 +22,9 @@ class TouristPlace extends Model
         'best_time_to_visit',
         'image_url',
         'gallery',
-        'map_link'
+        'map_link',
+           'main_attractions',
+    'purpose_and_significance',
     ];
 
     protected $casts = [
@@ -46,5 +48,5 @@ class TouristPlace extends Model
         return null;
     }
 
-    
+
 }
