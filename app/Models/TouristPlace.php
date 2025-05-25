@@ -25,6 +25,7 @@ class TouristPlace extends Model
         'map_link',
            'main_attractions',
     'purpose_and_significance',
+    'special_features',
     ];
 
     protected $casts = [

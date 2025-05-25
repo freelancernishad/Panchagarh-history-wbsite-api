@@ -55,6 +55,7 @@ class TouristPlaceController extends Controller
             'map_link' => 'nullable|string',
             'main_attractions' => 'nullable|string', // ✅ New field
             'purpose_and_significance' => 'nullable|string', // ✅ New field
+            'special_features' => 'nullable|string', // ✅ New field
         ]);
 
         if ($validator->fails()) {
@@ -144,6 +145,7 @@ class TouristPlaceController extends Controller
             'map_link' => 'nullable|string',
             'main_attractions' => 'nullable|string', // ✅ New field
             'purpose_and_significance' => 'nullable|string', // ✅ New field
+            'special_features' => 'nullable|string', // ✅ New field
         ]);
 
         if ($validator->fails()) {
