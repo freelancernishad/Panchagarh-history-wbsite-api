@@ -121,79 +121,85 @@ class TouristPlaceController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $place = TouristPlace::findOrFail($id);
+public function update(Request $request, $id)
+{
+    $place = TouristPlace::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'category_id' => 'nullable|exists:tourist_place_categories,id',
-            'name' => 'nullable|string|max:255',
-            'short_description' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'history' => 'nullable|string',
-            'architecture' => 'nullable|string',
-            'how_to_go' => 'nullable|string',
-            'where_to_stay' => 'nullable|string',
-            'where_to_eat' => 'nullable|string',
-            'ticket_price' => 'nullable|string|max:100',
-            'opening_hours' => 'nullable|string|max:255',
-            'best_time_to_visit' => 'nullable|string|max:255',
-            'image_url' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'gallery' => 'nullable|array',
-            'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'map_link' => 'nullable|string',
-            'main_attractions' => 'nullable|string', // ✅ New field
-            'purpose_and_significance' => 'nullable|string', // ✅ New field
-            'special_features' => 'nullable|string', // ✅ New field
-        ]);
+    $validator = Validator::make($request->all(), [
+        'category_id' => 'nullable|exists:tourist_place_categories,id',
+        'name' => 'nullable|string|max:255',
+        'short_description' => 'nullable|string|max:255',
+        'description' => 'nullable|string',
+        'location' => 'nullable|string|max:255',
+        'history' => 'nullable|string',
+        'architecture' => 'nullable|string',
+        'how_to_go' => 'nullable|string',
+        'where_to_stay' => 'nullable|string',
+        'where_to_eat' => 'nullable|string',
+        'ticket_price' => 'nullable|string|max:100',
+        'opening_hours' => 'nullable|string|max:255',
+        'best_time_to_visit' => 'nullable|string|max:255',
+        'image_url' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+        'gallery' => 'nullable|array',
+        'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+        'map_link' => 'nullable|string',
+        'main_attractions' => 'nullable|string',
+        'purpose_and_significance' => 'nullable|string',
+        'special_features' => 'nullable|string', // ✅ New field
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
 
     $data = $validator->validated();
-// return response()->json($request->all(), 200);
-        if ($request->hasFile('image_url')) {
-            $data['image_url'] = uploadFileToS3(
-                $request->file('image_url'),
-                'tourist_places',
+
+    // ✅ Handle main image upload
+    if ($request->hasFile('image_url')) {
+        $data['image_url'] = uploadFileToS3(
+            $request->file('image_url'),
+            'tourist_places',
+            [
+                'category_id' => $data['category_id'] ?? $place->category_id,
+                'description' => 'Updated main image of ' . ($data['name'] ?? $place->name),
+                'type' => 'tourist_place',
+                'uploaded_by' => auth()->check() ? auth()->id() : 'admin'
+            ]
+        );
+    }
+
+    // ✅ Handle gallery image uploads and retain old images
+    if ($request->hasFile('gallery')) {
+        $galleryUrls = [];
+
+        foreach ($request->file('gallery') as $galleryImage) {
+            $galleryUrl = uploadFileToS3(
+                $galleryImage,
+                'tourist_places/gallery',
                 [
                     'category_id' => $data['category_id'] ?? $place->category_id,
-                    'description' => 'Updated main image of ' . ($data['name'] ?? $place->name),
-                    'type' => 'tourist_place',
+                    'description' => 'Added to gallery of ' . ($data['name'] ?? $place->name),
+                    'type' => 'tourist_place_gallery',
                     'uploaded_by' => auth()->check() ? auth()->id() : 'admin'
                 ]
             );
+            $galleryUrls[] = $galleryUrl;
         }
 
-        $galleryUrls = [];
-        // $galleryUrls = $place->gallery ?? [];
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $galleryImage) {
-                $galleryUrl = uploadFileToS3(
-                    $galleryImage,
-                    'tourist_places/gallery',
-                    [
-                        'category_id' => $data['category_id'] ?? $place->category_id,
-                        'description' => 'Added to gallery of ' . ($data['name'] ?? $place->name),
-                        'type' => 'tourist_place_gallery',
-                        'uploaded_by' => auth()->check() ? auth()->id() : 'admin'
-                    ]
-                );
-                $galleryUrls[] = $galleryUrl;
-            }
+        // ✅ Merge old gallery with new images
+        $existingGallery = $place->gallery ?? [];
+        $mergedGallery = array_merge($existingGallery, $galleryUrls);
+        $data['gallery'] = $mergedGallery;
 
-            Log::info('Gallery URLs: ', $galleryUrls);
-            // Save updated gallery
-            $data['gallery'] = $galleryUrls;
-        }
-
-        $place->update($data);
-        Log::info('Updated gallery: ', $place->gallery);
-
-        return response()->json($place->toArray(), 200);
+        Log::info('Gallery URLs merged: ', $mergedGallery);
     }
+
+    // ✅ Update the tourist place
+    $place->update($data);
+
+    return response()->json($place->toArray(), 200);
+}
+
 
     public function destroy($id)
     {
