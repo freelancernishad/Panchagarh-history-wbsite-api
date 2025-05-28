@@ -39,13 +39,13 @@ public function index()
 public function store(Request $request)
 {
     $validator = Validator::make($request->all(), [
-        'title' => 'required|string|max:255',
-        'event_date' => 'required|date',
-        'start_time' => 'required|string',
-        'end_time' => 'required|string',
+        'title' => 'nullable|string|max:255',
+        'event_date' => 'nullable|date',
+        'start_time' => 'nullable|string',
+        'end_time' => 'nullable|string',
         'description' => 'nullable|string',
-        'location' => 'required|string|max:255',
-        'event_type' => 'required|string|max:100',
+        'location' => 'nullable|string|max:255',
+        'event_type' => 'nullable|string|max:100',
         'organizer_type' => 'nullable|string|max:100',
         'cover_image' => 'nullable|file|mimes:jpg,jpeg,png',
         'gallery.*' => 'nullable|file|mimes:jpg,jpeg,png',
