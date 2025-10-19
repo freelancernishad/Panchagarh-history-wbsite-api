@@ -10,6 +10,7 @@ class TouristPlace extends Model
         'category_id',
         'name',
         'location',
+        'location_sort',
         'description',
         'short_description',
         'history',
@@ -23,9 +24,9 @@ class TouristPlace extends Model
         'image_url',
         'gallery',
         'map_link',
-           'main_attractions',
-    'purpose_and_significance',
-    'special_features',
+        'main_attractions',
+        'purpose_and_significance',
+        'special_features',
     ];
 
     protected $casts = [

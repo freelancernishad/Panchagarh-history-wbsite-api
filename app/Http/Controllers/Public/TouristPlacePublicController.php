@@ -11,12 +11,16 @@ class TouristPlacePublicController extends Controller
     // ✅ List All (with optional filters)
     public function index(Request $request)
     {
-        $query = TouristPlace::select('id', 'name', 'location', 'category_id', 'image_url', 'created_at')
+        $query = TouristPlace::select('id', 'name', 'location', 'category_id', 'image_url', 'created_at', 'location_sort')
             ->with(['category:id,name'])
             ->orderBy('created_at', 'desc');
 
         if ($request->has('category_id')) {
             $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->has('location_sort')) {
+            $query->where('location_sort', $request->location_sort);
         }
 
         if ($request->has('limit')) {
@@ -25,6 +29,7 @@ class TouristPlacePublicController extends Controller
 
         return $query->get();
     }
+
 
 
 
